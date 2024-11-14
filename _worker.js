@@ -40,7 +40,7 @@ let go2Socks5s = [
 let addresses = [
 	//当sub为空时启用本地优选域名/优选IP，若不带端口号 TLS默认端口为443，#号后为备注别名
 	/*
-	'Join.my.Telegram.channel.CMLiussss.to.unlock.more.premium.nodes.cf.090227.xyz#加入我的频道t.me/CMLiussss解锁更多优选节点',
+	'Join.my.Telegram.channel.CMLiussss.to.unlock.more.premium.nodes.cf.090227.xyz#第二个',
 	'visa.cn:443',
 	'www.visa.com:8443',
 	'cis.visa.com:2053',
@@ -519,7 +519,7 @@ function makeReadableWebSocketStream(webSocketServer, earlyDataHeader, log) {
 				// 如果解码早期数据时出错，将错误传递给控制器
 				controller.error(error);
 			} else if (earlyData) {
-				// 如果有早期数据，将其加入流的队列中
+				// 如果有早期数据，将其流的队列中
 				controller.enqueue(earlyData);
 			}
 		},
@@ -1271,7 +1271,7 @@ async function proxyURL(proxyURL, url) {
 function checkSUB(host) {
 	if ((!sub || sub == '') && (addresses.length + addressesapi.length + addressesnotls.length + addressesnotlsapi.length + addressescsv.length) == 0){
 		addresses = [
-			'Join.my.Telegram.channel.CMLiussss.to.unlock.more.premium.nodes.cf.090227.xyz#加入我的频道t.me/CMLiussss解锁更多优选节点',
+			'Join.my.Telegram.channel.CMLiussss.to.unlock.more.premium.nodes.cf.090227.xyz#第二个',
 			'127.0.0.1:1234#CFnat',
 			'visa.cn:443',
 			'singapore.com:8443',
