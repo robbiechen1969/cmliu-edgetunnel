@@ -1288,9 +1288,15 @@ async function 生成配置信息(userID, hostName, sub, UA, RproxyIP, _url, fak
 			}
 			addresses = addresses.concat('127.0.0.1:1234#CFnat');
 			if (hostName.includes(".workers.dev")) {
-				addressesnotls = addressesnotls.concat(cfips.map(cidr => generateRandomIPFromCIDR(cidr) + '#CF随机节点'));
+			    let counter = 1;
+			    addressesnotls = addressesnotls.concat(
+				cfips.map(cidr => generateRandomIPFromCIDR(cidr) + `#CF随机节点${String(counter++).padStart(2, '0')}`)
+			    );
 			} else {
-				addresses = addresses.concat(cfips.map(cidr => generateRandomIPFromCIDR(cidr) + '#CF随机节点'));
+			    let counter = 1;
+			    addresses = addresses.concat(
+				cfips.map(cidr => generateRandomIPFromCIDR(cidr) + `#CF随机节点${String(counter++).padStart(2, '0')}`)
+			    );
 			}
 		}
 	}
