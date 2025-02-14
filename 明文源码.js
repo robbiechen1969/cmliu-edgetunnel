@@ -146,7 +146,7 @@ export default {
 					path = `/?ed=2560&socks5=${url.searchParams.get('socks')}`;
 					RproxyIP = 'false';
 				}
-
+				
 				const 路径 = url.pathname.toLowerCase();
 				if (路径 == '/') {
 					if (env.URL302) return Response.redirect(env.URL302, 302);
@@ -174,14 +174,16 @@ export default {
 					let pagesSum = UD;
 					let workersSum = UD;
 					let total = 24 * 1099511627776;
-
+					let content_type = 'text/plain;charset=utf-8';
+					
+					if (userAgent.includes('clash') || _url.searchParams.has('clash')) content_type = "text/yaml;charset=utf-8";					
 					if (userAgent && userAgent.includes('mozilla')) {
 						return new Response(维列斯Config, {
 							status: 200,
 							headers: {
-								"Content-Type": "text/html;charset=utf-8",
+								"Content-Type": content_type,
 								"Profile-Update-Interval": "6",
-								"Subscription-Userinfo": `upload=${pagesSum}; download=${workersSum}; total=${total}; expire=${expire}`,
+								"Subscription-Userinfo": `upload=${pagesSum}; download=${workersSum}; total=${total}; expire=${expire}; content_type=${content_type}`,
 								"Cache-Control": "no-store",
 							}
 						});
@@ -189,10 +191,11 @@ export default {
 						return new Response(维列斯Config, {
 							status: 200,
 							headers: {
+								"UA": userAgent,
 								"Content-Disposition": `attachment; filename=${FileName}; filename*=utf-8''${encodeURIComponent(FileName)}`,
-								//"Content-Type": "text/plain;charset=utf-8",
+								"Content-Type": content_type,
 								"Profile-Update-Interval": "6",
-								"Subscription-Userinfo": `upload=${pagesSum}; download=${workersSum}; total=${total}; expire=${expire}`,
+								"Subscription-Userinfo": `upload=${pagesSum}; download=${workersSum}; total=${total}; expire=${expire}; content_type=${content_type}`,
 							}
 						});
 					}
@@ -1364,7 +1367,7 @@ async function 生成配置信息(userID, hostName, sub, UA, RproxyIP, _url, fak
 		const 动态UUID信息 = (uuid != userID) ? `TOKEN: ${uuid}<br>UUIDNow: ${userID}<br>UUIDLow: ${userIDLow}<br>${userIDTime}TIME（动态UUID有效时间）: ${有效时间} 天<br>UPTIME（动态UUID更新时间）: ${更新时间} 时（北京时间）<br><br>` : `${userIDTime}`;
 		const 节点配置页 = `
 			################################################################<br>
-			Subscribe / sub 订阅地址, 点击链接自动 <strong>复制订阅链接</strong> 并 <strong>生成订阅二维码</strong> <br>
+			Subscribe / sub 订阅地址(修改), 点击链接自动 <strong>复制订阅链接</strong> 并 <strong>生成订阅二维码</strong> <br>
 			---------------------------------------------------------------<br>
 			自适应订阅地址:<br>
 			<a href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?sub','qrcode_0')" style="color:blue;text-decoration:underline;cursor:pointer;">https://${proxyhost}${hostName}/${uuid}</a><br>
@@ -1522,7 +1525,7 @@ async function 生成配置信息(userID, hostName, sub, UA, RproxyIP, _url, fak
 		if (!userAgent.includes(('CF-Workers-SUB').toLowerCase()) && !_url.searchParams.has('b64')  && !_url.searchParams.has('base64')) {
 			if ((userAgent.includes('clash') && !userAgent.includes('nekobox')) || (_url.searchParams.has('clash') && !userAgent.includes('subconverter'))) {
 				url = `${subProtocol}://${subConverter}/sub?target=clash&url=${encodeURIComponent(url)}&insert=false&config=${encodeURIComponent(subConfig)}&emoji=${subEmoji}&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
-				isBase64 = false;
+				isBase64 = false;				
 			} else if (userAgent.includes('sing-box') || userAgent.includes('singbox') || ((_url.searchParams.has('singbox') || _url.searchParams.has('sb')) && !userAgent.includes('subconverter'))) {
 				url = `${subProtocol}://${subConverter}/sub?target=singbox&url=${encodeURIComponent(url)}&insert=false&config=${encodeURIComponent(subConfig)}&emoji=${subEmoji}&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 				isBase64 = false;
@@ -1571,7 +1574,7 @@ async function 整理优选列表(api) {
 		const responses = await Promise.allSettled(api.map(apiUrl => fetch(apiUrl, {
 			method: 'get',
 			headers: {
-				'Accept': 'text/html,application/xhtml+xml,application/xml;',
+				'Accept': 'text/plain,application/xhtml+xml,application/xml;',
 				'User-Agent': atob('Q0YtV29ya2Vycy1lZGdldHVubmVsL2NtbGl1')
 			},
 			signal: controller.signal // 将AbortController的信号量添加到fetch请求中，以便于需要时可以取消请求
@@ -2183,7 +2186,7 @@ async function KV(request, env, txt = 'ADD.txt') {
 		`;
 
 		return new Response(html, {
-			headers: { "Content-Type": "text/html;charset=utf-8" }
+			headers: { "Content-Type": content_type }
 		});
 	} catch (error) {
 		console.error('处理请求时发生错误:', error);
